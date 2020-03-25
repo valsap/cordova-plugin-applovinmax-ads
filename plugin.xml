@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="cordova-plugin-applovinmax-ads" version="0.0.1">
+    <name>AppLovinMax</name>
+    <description>AppLovin Max mediation plugin</description>
+    <license>Apache 2.0</license>
+    <keywords>
+        AppLovin,
+        AppLovinMax,
+        mediation,
+        ads
+    </keywords>
+    <js-module src="www/applovinmax.js" name="AppLovinMax">
+        <clobbers target="AppLovinMax" />
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="AppLovinMax" >
+                <param name="android-package" value="com.lakgames.plugins.applovinmax.AppLovinMax"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/AppLovinMax.java" target-dir="src/com/lakgames/plugins/applovinmax/AppLovinMax" />
+        <framework src="com.android.support:support-v6:+" />
+    </platform>
+</plugin>
