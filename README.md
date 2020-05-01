@@ -1,5 +1,6 @@
 # AppLovin Max mediation plugin
 
+Only rewarded video ads for Android
 
 ## Install
 ```bash
