@@ -1,0 +1,15 @@
+cdvPluginPostBuildExtras.add({
+    repositories {
+        maven { url "https://applovin.bintray.com/Android-Adapter-SDKs" }
+    }
+
+    dependencies {
+        implementation 'com.applovin:applovin-sdk:+'
+        implementation 'com.applovin.mediation:facebook-adapter:+'
+        implementation 'com.android.support:recyclerview-v7:28.+'
+        implementation 'com.android.support:appcompat-v7:28.+'
+        implementation 'com.applovin.mediation:google-adapter:+'
+        implementation 'com.applovin.mediation:ironsource-adapter:+'
+        implementation 'com.applovin.mediation:unityads-adapter:+'
+    }
+})

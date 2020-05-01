@@ -1,32 +1,16 @@
-var exec = require('cordova/exec')
-
-function appLovinMaxExec(methodName, argsArray) {
-    var className = 'AppLovinMax';
+function appLovinMaxExec(name, params, onSuccess, onFailure) {
     cordova.exec(
-        function () {},
-        function (err) {
-            console.warn('AppLovinMax:cordova.exec(' + className + '.' + methodName + '): ' + err)
+        function callPluginSuccess(result) {
+            if (isFunction(onSuccess)) {
+                onSuccess(result);
+            }
         },
-        className,
-        methodName,
-        argsArray
-    );
-}
-
-module.exports = {
-    init: function (config) {
-        console.log("init module applovin max");
-        params = defaults(params, { userId: '' });
-        appLovinMaxExec('init', [config]);
-    }
-    showRewardedVideo : function(params) {
-        params = defaults(params, { placement: 'default' });
-        appLovinMaxExec('showRewardedVideo', [params]);
-    }
-    hasRewardedVideo : function (params) {
-        params = defaults(params, {});
-        appLovinMaxExec('hasRewardedVideo', [params]);
-    }
+        function callPluginFailure(error) {
+            if (isFunction(onFailure)) {
+                onFailure(error)
+            }
+        },
+        'AppLovinMaxPlugin', name, params);
 }
 
 /**
@@ -44,4 +28,82 @@ function defaults(o, defaultObject) {
         }
     }
     return o;
+}
+
+/**
+ * Helper function to check if a function is a function
+ * @param {Object} functionToCheck - function to check if is function
+ */
+function isFunction(functionToCheck) {
+    var getType = {};
+    var isFunction = functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
+    return isFunction === true;
+}
+
+var isAppLovinMaxInit = false;
+let AppLovinMax = (function (){
+    return {
+        init: function (params) {
+            if(isAppLovinMaxInit){
+                throw new Error("AppLovinMax init action error: plugin already initialized");
+            }
+            isAppLovinMaxInit = true;
+            params = defaults(params, {});
+            appLovinMaxExec('init', [], params.onSuccess, params.onFailure);
+        },
+        initAdUnit : function (params) {
+            if(!isAppLovinMaxInit){
+                throw new Error("AppLovinMax initAdUnit action error: plugin has not initialized");
+            }
+            if (params.hasOwnProperty("unit") === false){
+                throw new Error("AppLovinMax initAdUnit action error: missing unit type [REWARDED, BANNER, INTERSTITIAL]");
+            }
+            var unit = params["unit"];
+            const UNIT_TYPES = ["REWARDED", "BANNER", "INTERSTITIAL"];
+            if(UNIT_TYPES.indexOf(unit) === -1){
+                throw new Error("AppLovinMax initAdUnit action error: unknown unit type [REWARDED, BANNER, INTERSTITIAL]");
+            }
+            if (params.hasOwnProperty("unitId") === false){
+                throw new Error("AppLovinMax initAdUnit action error: missing unitId");
+            }
+            var unitId = params["unitId"];
+            appLovinMaxExec('initAdUnit', [unit, unitId], params.onSuccess, params.onFailure);
+        },
+        setUserId : function (params) {
+            if(!isAppLovinMaxInit){
+                throw new Error("AppLovinMax setUserId action error: plugin has not initialized");
+            }
+            params = defaults(params, {});
+            if (params.hasOwnProperty('userId') === false){
+                throw new Error("AppLovinMax setUserId action error: missing userId");
+            }
+            let userId = params["userId"];
+            appLovinMaxExec('setUserId', [userId], params.onSuccess, params.onFailure);
+        },
+        showRewardedVideo : function(params) {
+            if(!isAppLovinMaxInit){
+                throw new Error("AppLovinMax showRewardedVideo action error: plugin has not initialized");
+            }
+            params = defaults(params, {});
+            if (params.hasOwnProperty('placement') === false) {
+                throw new Error("AppLovinMax showRewardedVideo action error: missing placement");
+            }
+            let placement = params["placement"];
+            appLovinMaxExec('showRewardedVideo', [placement], params.onSuccess, params.onFailure);
+        },
+        hasRewardedVideo : function (params) {
+            if(!isAppLovinMaxInit){
+                throw new Error("AppLovinMax hasRewardedVideo action error: plugin has not initialized");
+            }
+            params = defaults(params, {});
+            if (isFunction(params.onSuccess) === false) {
+                throw new Error('AppLovinMax showRewardedVideo action error: missing onSuccess callback');
+            }
+            appLovinMaxExec('hasRewardedVideo', [], params.onSuccess, params.onFailure);
+        }
+    }
+})();
+
+if (typeof module !== undefined && module.exports) {
+    module.exports = AppLovinMax;
 }

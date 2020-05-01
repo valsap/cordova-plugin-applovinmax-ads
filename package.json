@@ -1,4 +1,23 @@
 {
+  "_from": "cordova-plugin-applovinmax-ads",
+  "_id": "cordova-plugin-applovinmax-ads@0.0.1",
+  "_location": "/cordova-plugin-applovinmax-ads",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "cordova-plugin-applovinmax-ads",
+    "name": "cordova-plugin-applovinmax-ads",
+    "escapedName": "cordova-plugin-applovinmax-ads",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_spec": "cordova-plugin-applovinmax-ads",
   "name": "cordova-plugin-applovinmax-ads",
   "version": "0.0.1",
   "description": "AppLovin Max mediation plugin",
@@ -12,15 +31,16 @@
     "type": "git",
     "url": "git+https://github.com/valsap/cordova-plugin-applovinmax-ads.git"
   },
+  "deprecated": false,
   "keywords": [
-    "AppLovin",
-    "AppLovinMax",
-    "mediation",
-    "ads",
+    "cordova",
     "ecosystem:cordova",
-    "cordova-android"
+    "cordova-android",
+    "cordova-ios"
   ],
-  "author": "Vladimir Saponenko",
+  "author": {
+    "name": "Vladimir Saponenko"
+  },
   "license": "Apache 2.0",
   "bugs": {
     "url": "https://github.com/valsap/cordova-plugin-applovinmax-ads/issues"
