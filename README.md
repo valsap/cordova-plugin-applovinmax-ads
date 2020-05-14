@@ -103,7 +103,7 @@ window.addEventListener("rewardedVideoHidden", (data) => {
 });
 ```
 
-##Interstitial video
+## Interstitial video
 ### Has next interstitial video loaded and ready to show
 ```js
 AppLovinMax.hasInterstitialVideo({
