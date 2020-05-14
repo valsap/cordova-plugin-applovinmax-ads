@@ -97,9 +97,30 @@ let AppLovinMax = (function (){
             }
             params = defaults(params, {});
             if (isFunction(params.onSuccess) === false) {
-                throw new Error('AppLovinMax showRewardedVideo action error: missing onSuccess callback');
+                throw new Error('AppLovinMax hasRewardedVideo action error: missing onSuccess callback');
             }
             appLovinMaxExec('hasRewardedVideo', [], params.onSuccess, params.onFailure);
+        },
+        showInterstitialVideo : function(params) {
+            if(!isAppLovinMaxInit){
+                throw new Error("AppLovinMax showInterstitialVideo action error: plugin has not initialized");
+            }
+            params = defaults(params, {});
+            if (params.hasOwnProperty('placement') === false) {
+                throw new Error("AppLovinMax showInterstitialVideo action error: missing placement");
+            }
+            let placement = params["placement"];
+            appLovinMaxExec('showInterstitialVideo', [placement], params.onSuccess, params.onFailure);
+        },
+        hasInterstitialVideo : function (params) {
+            if(!isAppLovinMaxInit){
+                throw new Error("AppLovinMax hasInterstitialVideo action error: plugin has not initialized");
+            }
+            params = defaults(params, {});
+            if (isFunction(params.onSuccess) === false) {
+                throw new Error('AppLovinMax hasInterstitialVideo action error: missing onSuccess callback');
+            }
+            appLovinMaxExec('hasInterstitialVideo', [], params.onSuccess, params.onFailure);
         }
     }
 })();

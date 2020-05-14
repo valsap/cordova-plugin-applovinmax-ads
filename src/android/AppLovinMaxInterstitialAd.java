@@ -10,68 +10,63 @@ import org.json.JSONObject;
 import android.os.Handler;
 
 import com.applovin.mediation.MaxAd;
-import com.applovin.mediation.MaxReward;
-import com.applovin.mediation.MaxRewardedAdListener;
-import com.applovin.mediation.ads.MaxRewardedAd;
+import com.applovin.mediation.MaxAdListener;
+import com.applovin.mediation.ads.MaxInterstitialAd;
 
-public class AppLovinMaxRewardedAd implements MaxRewardedAdListener {
+public class AppLovinMaxInterstitialAd implements MaxAdListener {
 
-    private static final String VIDEO_LOADED_EVENT = "rewardedVideoLoaded";
-    private static final String VIDEO_LOADING_FAILED_EVENT = "rewardedVideoLoadingFailed";
+    private static final String VIDEO_LOADED_EVENT = "interstitialVideoLoaded";
+    private static final String VIDEO_LOADING_FAILED_EVENT = "interstitialVideoLoadingFailed";
 
-    private static final String VIDEO_FAILED_DISPLAY_EVENT = "rewardedVideoDisplayFailed";
-    private static final String VIDEO_START_DISPLAY_EVENT = "rewardedVideoDisplayStart";
-    private static final String VIDEO_END_DISPLAY_EVENT = "rewardedVideoDisplayEnd";
+    private static final String VIDEO_FAILED_DISPLAY_EVENT = "interstitialVideoDisplayFailed";
+    private static final String VIDEO_START_DISPLAY_EVENT = "interstitialVideoDisplayStart";
+    private static final String VIDEO_END_DISPLAY_EVENT = "interstitialVideoDisplayEnd";
 
-    private static final String VIDEO_STARTED_EVENT = "rewardedVideoOpened";
-    private static final String VIDEO_ENDED_EVENT = "rewardedVideoEnded";
-    private static final String VIDEO_ENDED_HIDDEN = "rewardedVideoHidden";
-
-    private static final String VIDEO_REWARD_RECEIVED_EVENT = "rewardedVideoRewardReceived";
+    private static final String VIDEO_ENDED_HIDDEN = "interstitialVideoHidden";
 
     private AppLovinMaxPlugin plugin;
     private boolean isInit = false;
-    private MaxRewardedAd rewardedAd;
+    private MaxInterstitialAd interstitialAd;
     private int retryAttempt;
 
-    public AppLovinMaxRewardedAd(AppLovinMaxPlugin plugin) {
+    public AppLovinMaxInterstitialAd(AppLovinMaxPlugin plugin) {
         this.plugin = plugin;
     }
 
-    public void createRewardedAd(String unitId) {
+    public void createInterstitialAd(String unitId) {
         if(isInit){
             return;
         }
-        rewardedAd = MaxRewardedAd.getInstance(unitId, plugin.cordova.getActivity());
-        rewardedAd.setListener(this);
-        rewardedAd.loadAd();
+        interstitialAd = new MaxInterstitialAd(unitId, plugin.cordova.getActivity());
+        interstitialAd.setListener(this);
+        interstitialAd.loadAd();
         isInit = true;
     }
 
-    public void showRewardedVideo(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+    public void showInterstitialVideo(JSONArray args, final CallbackContext callbackContext) throws JSONException {
         if(!isInit){
             return;
         }
         String placement = args.getString(0);
         plugin.cordova.getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                if (!rewardedAd.isReady()){
+                if (!interstitialAd.isReady()){
                     callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, false));
                 }else{
-                    rewardedAd.showAd(placement);
+                    interstitialAd.showAd(placement);
                     callbackContext.success();
                 }
             }
         });
     }
 
-    public void hasRewardedVideo(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+    public void hasInterstitialVideo(JSONArray args, final CallbackContext callbackContext) throws JSONException {
         if(!isInit){
             return;
         }
         plugin.cordova.getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, rewardedAd.isReady()));
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, interstitialAd.isReady()));
             }
         });
     }
@@ -79,7 +74,7 @@ public class AppLovinMaxRewardedAd implements MaxRewardedAdListener {
     // MAX Ad Listener
     @Override
     public void onAdLoaded(final MaxAd maxAd) {
-        // Rewarded ad is ready to be shown. rewardedAd.isReady() will now return 'true'
+        // Interstitial ad is ready to be shown. interstitialAd.isReady() will now return 'true'
         // Reset retry attempt
         retryAttempt = 0;
         JSONObject data = new JSONObject();
@@ -93,13 +88,11 @@ public class AppLovinMaxRewardedAd implements MaxRewardedAdListener {
 
     @Override
     public void onAdLoadFailed(final String adUnitId, final int errorCode) {
-        // Rewarded ad failed to load. We recommend re-trying in 3 seconds.
+        // Interstitial ad failed to load. We recommend retrying with exponentially higher delays.
         retryAttempt++;
         new Handler().postDelayed( new Runnable() {
             @Override
-            public void run() {
-                rewardedAd.loadAd();
-            }
+            public void run() { interstitialAd.loadAd(); }
         }, 3000 );
         JSONObject data = new JSONObject();
         try{
@@ -113,8 +106,8 @@ public class AppLovinMaxRewardedAd implements MaxRewardedAdListener {
 
     @Override
     public void onAdDisplayFailed(final MaxAd maxAd, final int errorCode) {
-        // Rewarded ad failed to display. We recommend loading the next ad
-        rewardedAd.loadAd();
+        // Interstitial ad failed to display. We recommend loading the next ad
+        interstitialAd.loadAd();
         JSONObject data = new JSONObject();
         try{
             data.put("unitId", maxAd.getAdUnitId());
@@ -149,8 +142,8 @@ public class AppLovinMaxRewardedAd implements MaxRewardedAdListener {
 
     @Override
     public void onAdHidden(final MaxAd maxAd) {
-        // rewarded ad is hidden. Pre-load the next ad
-        rewardedAd.loadAd();
+        // Interstitial ad is hidden. Pre-load the next ad
+        interstitialAd.loadAd();
         JSONObject data = new JSONObject();
         try{
             data.put("unitId", maxAd.getAdUnitId());
@@ -158,42 +151,6 @@ public class AppLovinMaxRewardedAd implements MaxRewardedAdListener {
             e.printStackTrace();
         }
         this.emitWindowEvent(VIDEO_ENDED_HIDDEN, data);
-    }
-
-    @Override
-    public void onRewardedVideoStarted(final MaxAd maxAd) {
-        JSONObject data = new JSONObject();
-        try{
-            data.put("unitId", maxAd.getAdUnitId());
-        }catch(JSONException e){
-            e.printStackTrace();
-        }
-        this.emitWindowEvent(VIDEO_STARTED_EVENT, data);
-    }
-
-    @Override
-    public void onRewardedVideoCompleted(final MaxAd maxAd) {
-        JSONObject data = new JSONObject();
-        try {
-            data.put("unitId", maxAd.getAdUnitId());
-        }catch(JSONException e){
-            e.printStackTrace();
-        }
-        this.emitWindowEvent(VIDEO_ENDED_EVENT, data);
-    }
-
-    @Override
-    public void onUserRewarded(final MaxAd maxAd, final MaxReward maxReward) {
-        JSONObject data = new JSONObject();
-        try {
-            data.put("unitId", maxAd.getAdUnitId());
-            data.put("label", maxReward.getLabel());
-            data.put("amount", maxReward.getAmount());
-        }catch(JSONException e){
-            e.printStackTrace();
-        }
-        // Rewarded ad was displayed and user should receive the reward
-        this.emitWindowEvent(VIDEO_REWARD_RECEIVED_EVENT, data);
     }
 
     /** ----------------------- UTILS --------------------------- */

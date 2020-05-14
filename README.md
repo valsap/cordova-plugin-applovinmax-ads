@@ -1,6 +1,6 @@
 # AppLovin Max mediation plugin
 
-Only rewarded video ads for Android
+Interstitial and Rewarded video ads for Android
 
 ## Install
 ```bash
@@ -13,7 +13,6 @@ cordova plugin add https://github.com/valsap/cordova-plugin-applovinmax-ads.git
   <meta-data android:name="applovin.sdk.key" android:value=[SDK_KEY_HERE]/>
 </config-file>
 ```
-
 
 ## Usage
 ### To initialize plugin
@@ -30,15 +29,18 @@ AppLovinMax.init({
 
 ### Set custom user id
 ```js
-AppLovinMax.setUserId({userId : [USER_ID_HERE]});
+AppLovinMax.setUserId({userId : USER_ID_HERE});
 ```
 
-### Init AD UNIT
+### Init AD UNITs.
 ```js
-AppLovinMax.initAdUnit({unit : "REWARDED", unitId : [UNIT_ID_HERE]});
+AppLovinMax.initAdUnit({unit : "REWARDED", unitId : UNIT_ID_HERE});
+AppLovinMax.initAdUnit({unit : "INTERSTITIAL", unitId : UNIT_ID_HERE});
 ```
 
-## Has next video loaded and ready to show
+## Rewarded video ads
+
+### Has next rewarded video loaded and ready to show
 ```js
 AppLovinMax.hasRewardedVideo({
   onSuccess: function (available) {
@@ -47,35 +49,103 @@ AppLovinMax.hasRewardedVideo({
 });
 ```
 
-## Show rewarded video
+### Show rewarded video
+If you don't use S2S rewarding, just ignore "placement" field
 ```js
-//Video completed, reward user here
-function onReceived(event){
-  let unitId = event.unitId;
-  let label = event.label;
-  let amount = event.amount;
-  console.log("Applovin MAX: reward received: unitId", unitId, "label", label, "amount", amount);
-}
-
-//User cancelled video
-function onCancelled(data){
-    console.log("AD: reward cancelled:", data);
-}
-
-//Something went wrong
-function onFailed(details){
-    console.log("Applovin MAX: displaing rewarded video error:", details);
-}
-
-//Add listeners
-window.addEventListener("rewardedVideoRewardReceived", onReceived);
-window.addEventListener("rewardedVideoHidden", onCancelled);
-window.addEventListener("rewardedVideoDisplayFailed", onFailed);
-window.addEventListener("rewardedVideoLoadingFailed", onFailed);
-
 AppLovinMax.showRewardedVideo({
-    placement : [YOUR_PLACEMENT_TO_REWARD_AT_SERVER_SIDE],
+    placement : YOUR_PLACEMENT_TO_REWARD_AT_SERVER_SIDE,
     onSuccess : () => {},
     onFailure : () => {}
+});
+```
+
+### Rewarded video events
+Rewarded video loading events
+```js
+window.addEventListener("rewardedVideoLoaded", (data) => {
+    console.log("Applovin Max: rewarded video loaded:", data["unitId"]);
+});
+window.addEventListener("rewardedVideoLoadingFailed", (data) => {
+    console.log("Applovin Max: rewarded video loading error:", data["unitId"], data["errorCode"]);
+});
+```
+Rewarded video displaying events
+```js
+window.addEventListener("rewardedVideoDisplayFailed", (data) => {
+    console.log("Applovin Max: rewarded video display failed:", data["unitId"], data["errorCode"]);
+});
+window.addEventListener("rewardedVideoDisplayStart", (data) => {
+    console.log("Applovin Max: rewarded video display start:", data["unitId"]);
+});
+window.addEventListener("rewardedVideoDisplayEnd", (data) => {
+    console.log("Applovin Max: rewarded video display end:", data["unitId"]);
+});
+```
+Rewarded video completed and fired REWARD event
+```js
+window.addEventListener("rewardedVideoRewardReceived", (data) => {
+        let unitId = data["unitId"];
+        let label = data["label"];
+        let amount = data["amount"];
+        console.log("Applovin Max: reward received:", unitId, label, amount);
+});
+```
+Rewarded video watching process events
+```js
+window.addEventListener("rewardedVideoOpened", (data) => {
+    console.log("Applovin Max: rewarded video opened:", data["unitId"]);
+});
+window.addEventListener("rewardedVideoEnded", (data) => {
+    console.log("Applovin Max: rewarded video ended:", data["unitId"]);
+});
+window.addEventListener("rewardedVideoHidden", (data) => {
+    console.log("Applovin Max: rewarded video closed:", data["unitId"]);
+});
+```
+
+##Interstitial video
+### Has next interstitial video loaded and ready to show
+```js
+AppLovinMax.hasInterstitialVideo({
+  onSuccess: function (available) {
+    console.log("Applovin Max: ready to show interstitial video:", available);
+  }
+});
+```
+
+### Show interstitial video
+```js
+AppLovinMax.showInterstitialVideo({
+    onSuccess : () => {},
+    onFailure : () => {}
+});
+```
+
+### Interstitial video events
+Interstitial video loading events
+```js
+window.addEventListener("interstitialVideoLoaded", (data) => {
+    console.log("Applovin Max: interstitial video loaded:", data["unitId"]);
+});
+window.addEventListener("interstitialVideoLoadingFailed", (data) => {
+    console.log("Applovin Max: interstitial video loading error:", data["unitId"], data["errorCode"]);
+});
+```
+Interstitial video displaying events
+```js
+window.addEventListener("interstitialVideoDisplayFailed", (data) => {
+    console.log("Applovin Max: interstitial video display failed:", data["unitId"], data["errorCode"]);
+});
+window.addEventListener("interstitialVideoDisplayStart", (data) => {
+    console.log("Applovin Max: interstitial video display start:", data["unitId"]);
+});
+window.addEventListener("interstitialVideoDisplayEnd", (data) => {
+    console.log("Applovin Max: interstitial video display end:", data["unitId"]);
+});
+```
+Interstitial video watching process events
+```js
+window.addEventListener("interstitialVideoHidden", (data) => {
+    console.log("Applovin Max: interstitial video closed:", data["unitId"]);
 });
 ```

@@ -1,6 +1,7 @@
 package com.lakgames.plugins.applovinmax;
 
 import com.lakgames.plugins.applovinmax.AppLovinMaxRewardedAd;
+import com.lakgames.plugins.applovinmax.AppLovinMaxInterstitialAd;
 
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
@@ -29,10 +30,12 @@ public class AppLovinMaxPlugin extends CordovaPlugin{
 
     //ADs
     private AppLovinMaxRewardedAd rewardedAd;
+    private AppLovinMaxInterstitialAd interstitialAd;
 
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         cordovaWebView = webView;
         rewardedAd = new AppLovinMaxRewardedAd(this);
+        interstitialAd = new AppLovinMaxInterstitialAd(this);
         super.initialize(cordova, webView);
     }
 
@@ -56,6 +59,14 @@ public class AppLovinMaxPlugin extends CordovaPlugin{
         }
         if (action.equals("showRewardedVideo")) {
             rewardedAd.showRewardedVideo(args, callbackContext);
+            return true;
+        }
+        if (action.equals("hasInterstitialVideo")) {
+            interstitialAd.hasInterstitialVideo(args, callbackContext);
+            return true;
+        }
+        if (action.equals("showInterstitialVideo")) {
+            interstitialAd.showInterstitialVideo(args, callbackContext);
             return true;
         }
         return false;
@@ -112,7 +123,7 @@ public class AppLovinMaxPlugin extends CordovaPlugin{
         }else if(UNIT_TYPE_BANNER.equals(unit)){
 
         }else if(UNIT_TYPE_INTERSTITIAL.equals(unit)){
-
+            interstitialAd.createInterstitialAd(unitId);
         }
     }
 }

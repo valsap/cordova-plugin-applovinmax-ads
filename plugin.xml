@@ -29,6 +29,7 @@
 
         <source-file src="src/android/AppLovinMaxPlugin.java" target-dir="src/com/lakgames/plugins/applovinmax" />
         <source-file src="src/android/AppLovinMaxRewardedAd.java" target-dir="src/com/lakgames/plugins/applovinmax" />
+        <source-file src="src/android/AppLovinMaxInterstitialAd.java" target-dir="src/com/lakgames/plugins/applovinmax" />
 
         <framework src="src/android/appLovinMax.gradle" custom="true" type="gradleReference" />
         <framework src="com.android.support:support-v4:+" />
