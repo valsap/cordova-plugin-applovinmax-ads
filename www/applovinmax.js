@@ -85,9 +85,7 @@ let AppLovinMax = (function (){
                 throw new Error("AppLovinMax showRewardedVideo action error: plugin has not initialized");
             }
             params = defaults(params, {});
-            if (params.hasOwnProperty('placement') === false) {
-                throw new Error("AppLovinMax showRewardedVideo action error: missing placement");
-            }
+            !params.hasOwnProperty('placement') ? params["placement"] = "" : 0;
             let placement = params["placement"];
             appLovinMaxExec('showRewardedVideo', [placement], params.onSuccess, params.onFailure);
         },
@@ -106,9 +104,7 @@ let AppLovinMax = (function (){
                 throw new Error("AppLovinMax showInterstitialVideo action error: plugin has not initialized");
             }
             params = defaults(params, {});
-            if (params.hasOwnProperty('placement') === false) {
-                throw new Error("AppLovinMax showInterstitialVideo action error: missing placement");
-            }
+            !params.hasOwnProperty('placement') ? params["placement"] = "" : 0;
             let placement = params["placement"];
             appLovinMaxExec('showInterstitialVideo', [placement], params.onSuccess, params.onFailure);
         },
