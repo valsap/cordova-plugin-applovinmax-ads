@@ -77,9 +77,6 @@ window.addEventListener("rewardedVideoDisplayFailed", (data) => {
 window.addEventListener("rewardedVideoDisplayStart", (data) => {
     console.log("Applovin Max: rewarded video display start:", data["unitId"]);
 });
-window.addEventListener("rewardedVideoDisplayEnd", (data) => {
-    console.log("Applovin Max: rewarded video display end:", data["unitId"]);
-});
 ```
 Rewarded video completed and fired REWARD event
 ```js
@@ -100,6 +97,12 @@ window.addEventListener("rewardedVideoEnded", (data) => {
 });
 window.addEventListener("rewardedVideoHidden", (data) => {
     console.log("Applovin Max: rewarded video closed:", data["unitId"]);
+});
+```
+Rewarded video clicked
+```js
+window.addEventListener("rewardedVideoClicked", (data) => {
+    console.log("Applovin Max: rewarded video clicked:", data["unitId"]);
 });
 ```
 
@@ -139,13 +142,16 @@ window.addEventListener("interstitialVideoDisplayFailed", (data) => {
 window.addEventListener("interstitialVideoDisplayStart", (data) => {
     console.log("Applovin Max: interstitial video display start:", data["unitId"]);
 });
-window.addEventListener("interstitialVideoDisplayEnd", (data) => {
-    console.log("Applovin Max: interstitial video display end:", data["unitId"]);
-});
 ```
 Interstitial video watching process events
 ```js
 window.addEventListener("interstitialVideoHidden", (data) => {
     console.log("Applovin Max: interstitial video closed:", data["unitId"]);
+});
+```
+Interstitial video clicked
+```js
+window.addEventListener("interstitialVideoClicked", (data) => {
+    console.log("Applovin Max: interstitial video clicked:", data["unitId"]);
 });
 ```

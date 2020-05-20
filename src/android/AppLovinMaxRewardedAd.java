@@ -21,13 +21,14 @@ public class AppLovinMaxRewardedAd implements MaxRewardedAdListener {
 
     private static final String VIDEO_FAILED_DISPLAY_EVENT = "rewardedVideoDisplayFailed";
     private static final String VIDEO_START_DISPLAY_EVENT = "rewardedVideoDisplayStart";
-    private static final String VIDEO_END_DISPLAY_EVENT = "rewardedVideoDisplayEnd";
 
     private static final String VIDEO_STARTED_EVENT = "rewardedVideoOpened";
     private static final String VIDEO_ENDED_EVENT = "rewardedVideoEnded";
     private static final String VIDEO_ENDED_HIDDEN = "rewardedVideoHidden";
 
     private static final String VIDEO_REWARD_RECEIVED_EVENT = "rewardedVideoRewardReceived";
+
+    private static final String VIDEO_CLICKED = "rewardedVideoClicked";
 
     private AppLovinMaxPlugin plugin;
     private boolean isInit = false;
@@ -144,7 +145,7 @@ public class AppLovinMaxRewardedAd implements MaxRewardedAdListener {
         }catch(JSONException e){
             e.printStackTrace();
         }
-        this.emitWindowEvent(VIDEO_END_DISPLAY_EVENT, data);
+        this.emitWindowEvent(VIDEO_CLICKED, data);
     }
 
     @Override

@@ -20,9 +20,10 @@ public class AppLovinMaxInterstitialAd implements MaxAdListener {
 
     private static final String VIDEO_FAILED_DISPLAY_EVENT = "interstitialVideoDisplayFailed";
     private static final String VIDEO_START_DISPLAY_EVENT = "interstitialVideoDisplayStart";
-    private static final String VIDEO_END_DISPLAY_EVENT = "interstitialVideoDisplayEnd";
 
     private static final String VIDEO_ENDED_HIDDEN = "interstitialVideoHidden";
+
+    private static final String VIDEO_CLICKED = "interstitialVideoClicked";
 
     private AppLovinMaxPlugin plugin;
     private boolean isInit = false;
@@ -137,7 +138,7 @@ public class AppLovinMaxInterstitialAd implements MaxAdListener {
         }catch(JSONException e){
             e.printStackTrace();
         }
-        this.emitWindowEvent(VIDEO_END_DISPLAY_EVENT, data);
+        this.emitWindowEvent(VIDEO_CLICKED, data);
     }
 
     @Override
