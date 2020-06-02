@@ -1,15 +1,28 @@
-cdvPluginPostBuildExtras.add({
-    repositories {
-        maven { url "https://applovin.bintray.com/Android-Adapter-SDKs" }
-    }
+repositories {
+    maven { url "https://adcolony.bintray.com/AdColony" }
+    maven { url "https://chartboostmobile.bintray.com/Chartboost" }
+    maven { url "https://fyber.bintray.com/marketplace" }
+    maven { url "https://applovin.bintray.com/Android-Adapter-SDKs" }
+    maven { url "https://s3.amazonaws.com/smaato-sdk-releases/" }
+}
 
-    dependencies {
-        implementation 'com.applovin:applovin-sdk:+'
-        implementation 'com.applovin.mediation:facebook-adapter:+'
-        implementation 'com.android.support:recyclerview-v7:28.+'
-        implementation 'com.android.support:appcompat-v7:28.+'
-        implementation 'com.applovin.mediation:google-adapter:+'
-        implementation 'com.applovin.mediation:ironsource-adapter:+'
-        implementation 'com.applovin.mediation:unityads-adapter:+'
-    }
-})
+dependencies {
+    implementation 'com.applovin:applovin-sdk:+'
+    implementation 'com.applovin.mediation:adcolony-adapter:+'
+    implementation 'com.applovin.mediation:chartboost-adapter:+'
+    implementation 'com.google.android.gms:play-services-base:16.1.0'
+    implementation 'com.applovin.mediation:facebook-adapter:+'
+    implementation 'com.android.support:recyclerview-v7:28.+'
+    implementation 'com.android.support:appcompat-v7:28.+'
+    implementation 'com.applovin.mediation:fyber-adapter:+'
+    implementation 'com.applovin.mediation:google-adapter:+'
+    implementation 'com.applovin.mediation:inmobi-adapter:+'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.android.support:customtabs:28.+'
+    implementation 'com.applovin.mediation:ironsource-adapter:+'
+    implementation 'com.applovin.mediation:mintegral-adapter:+'
+    implementation 'com.applovin.mediation:mytarget-adapter:+'
+    implementation 'com.applovin.mediation:smaato-adapter:+'
+    implementation 'com.applovin.mediation:tapjoy-adapter:+'
+    implementation 'com.applovin.mediation:unityads-adapter:+'
+}
